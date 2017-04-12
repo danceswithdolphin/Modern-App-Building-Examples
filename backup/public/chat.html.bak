@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=2">
+<title>Chat</title>
+<script>
+window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
+    alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
+    + ' Column: ' + column + ' StackTrace: ' +  errorObj);
+}
+function f_load(){
+	document.getElementById('user').focus();
+}
+function f_change_post (){
+  console.log('f_change_post');
+  document.getElementById('textarea').innerHTML +=
+    document.getElementById('user').value + ': ' +
+    document.getElementById('post').value.replace(/\n/g,'<br>').replace(/ /g,'&nbsp;') + '<br>';
+
+  var myfile=encodeURIComponent(document.getElementById("topic").value);
+  var mydata=document.getElementById("textarea").innerHTML;  
+  var params="filename="+'./public/chats/'+myfile+'.txt'+"&mydata="+encodeURIComponent(mydata);
+  console.log("params='"+params+"'");
+  var url="xhr-write?"+params;
+  console.log("url='"+url+"'");
+  var http=new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.onreadystatechange = function()
+  {
+    if(http.readyState == 4 && http.status == 200) 
+    {
+    }
+  }
+  http.send(null);  
+  document.getElementById('post').value='';
+  var element = document.getElementById("textarea");
+  element.scrollTop = element.scrollHeight;
+  document.getElementById('post').focus();
+}
+
+function f_change_topic () {
+  document.getElementById("textarea").innerHTML = '';
+  selfile = document.getElementById("topic").value;
+  var url = "xhr-read";
+  var params = "filename=" + './public/chats/' + selfile + '.txt';
+  var http=new XMLHttpRequest();
+  http.open("GET", url+"?"+params, true);
+  http.onreadystatechange = function()
+  {
+    if(http.readyState == 4 && http.status == 200) 
+    {
+      document.getElementById("textarea").innerHTML = http.responseText;
+      // console.log(http.responseText);
+    }
+  }
+  http.send(null);  
+}
+
+</script>	
+</head>
+<body onload="f_load();">
+	User:&nbsp;<input type="text" size="50" id="user"></input><br>
+	Topic:<input type="text" size="50" id="topic" onchange="f_change_topic();"></input><br>
+	Post:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<textarea id="post" onchange="f_change_post();"; rows="5" cols="80"></textarea>
+	<br>
+	Conversation:<div id="textarea" style="overflow:scroll; height:400px;border-style:solid"></div><br>
+<div id="message">
+</div>
+</body>
+</html>

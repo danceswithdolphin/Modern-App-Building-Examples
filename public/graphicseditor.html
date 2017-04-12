@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+var x = 0;
+var y = 0;
+var image_on = false;
+var path_on=false;
+var innerhtml = '';
+var imagehtml = '';
+var pathhtml = '';
+var pathpoints = [];
+
+function f_mousemove (event) {
+  x=event.offsetX;
+  y=event.offsetY;
+  f_update('move');
+}
+function f_click(event) {
+  // console.log('f_click');	
+  x=event.offsetX;
+  y=event.offsetY;
+  f_update('click');
+  if (path_on) {
+    pathhtml += ' ' + x + ',' +y;
+    pathpoints.push(''+ x + ','+y)
+    f_compute_path();
+    f_paint();    
+  }
+}
+function f_mouseout() {
+  x=0;
+  y=0;
+  f_update('clear');
+}
+function f_update(xx) {
+  // console.log (xx + ' ' + x + ' ' + y);
+  document.getElementById('x').innerHTML=x;
+  document.getElementById('y').innerHTML=y;
+}
+
+function f_clear (){
+svghtml='';
+pathhtml='';
+pathpoints = [];
+document.getElementById('graphics').innerHTML='';
+document.getElementById('textarea').value='';
+}
+
+function f_manual () {
+  document.getElementById('graphics').innerHTML = document.getElementById ('textarea').value;
+}
+
+function f_svg () {
+	svghtml = '<svg style="'+ document.getElementById('svgstyle').value + '" >';
+}
+
+function f_compute_path() {
+  var top = pathpoints.length;
+  // console.log('f_compute_path');
+  // console.log('top='+top);
+  // console.log('pathpoints='+pathpoints.join(' '));
+  if (top < 2) {
+    // nothing to draw
+    pathhtml = '';
+  } else {
+    pathhtml = '<path ' + document.getElementById('pathstyle').value + ' d="M ' + pathpoints[0] + ' ';
+    var i=0;
+    if (top < 3) {
+      // no Q part
+    } else {
+      pathhtml += 'Q ';
+    }
+    for (i=1; i < top; i=i+2) {
+      if ( i === (top - 1)) {
+        // unpaired point
+        pathhtml += 'L ' + pathpoints[i] + ' ';
+        // console.log (pathhtml);
+      } else {
+      // old Q calc  pathhtml += pathpoints[i] + ' ' + pathpoints[i+1] + ' ';
+        var A = pathpoints[i-1];
+	var X = pathpoints[i];
+	var B = pathpoints[i+1];
+	var [Axs,Ays] = A.split(',');
+	var Ax=parseInt(Axs);
+	var Ay=parseInt(Ays);
+	var [Xxs,Xys] = X.split(',');
+	var Xx=parseInt(Xxs);
+	var Xy=parseInt(Xys);
+ 	var [Bxs,Bys]=B.split(',');
+	var Bx=parseInt(Bxs);
+	var By=parseInt(Bys);
+	var Yx = (Ax + Bx)/2;
+	var Yy = (Ay + By)/2;
+	var Cx = 2*Xx - Yx;
+	var Cy = 2*Xy - Yy;
+	var Cs = '' + Cx +','+Cy;
+        pathhtml += Cs + ' ' + pathpoints[i+1] + ' ';
+      }
+    }
+    pathhtml += '" />';
+  }
+}
+
+function f_paint () {
+    innerhtml = svghtml + '\n'+imagehtml+'\n' + pathhtml + '\n</svg>';
+    document.getElementById('graphics').innerHTML = innerhtml;
+    document.getElementById('textarea').value = innerhtml;
+}
+
+function f_image () {
+  if (image_on) {
+    image_on = false;
+    imagehtml = '';
+    document.getElementById('image').style.backgroundColor="white";
+    f_paint();
+  } else {
+    image_on=true;
+    document.getElementById('image').style.backgroundColor="yellow";
+    imagehtml= '<image href="' + document.getElementById("imagefile").value + '" x="' + document.getElementById("imagex").value + '" y="' + document.getElementById("imagey").value + '" height="'+document.getElementById("imageheight").value +'" />';
+    f_paint();
+  }
+}
+
+function f_path(){
+  // console.log('f_path');
+  // console.log(document.getElementById('path'));
+  if (path_on) {
+    path_on=false;
+    document.getElementById('path').style.backgroundColor="white";
+  } else {
+    path_on=true;
+    document.getElementById('path').style.backgroundColor="yellow";
+    if (pathhtml === '') {
+      pathhtml = '<path ' + document.getElementById('pathstyle').value + ' d="M ';
+    }
+  }
+}
+
+function f_readbutton() {
+  var selfile=document.getElementById("svgdir").value +
+              document.getElementById("svgfile").value;
+  var url = "xhr-read";
+  var params = "filename=" + selfile;
+  var http=new XMLHttpRequest();
+  http.open("GET", url+"?"+params, true);
+  http.onreadystatechange = function()
+  {
+    if(http.readyState == 4 && http.status == 200) 
+    {
+      document.getElementById("textarea").value = http.responseText;
+    }
+  }
+  http.send(null);  
+}
+
+function f_writebutton() {
+  var myfile=document.getElementById("svgdir").value +
+            document.getElementById("svgfile").value;
+  var mydata=document.getElementById("textarea").value;  
+  var params="filename="+myfile+"&mydata="+encodeURIComponent(mydata);
+  var url="xhr-write?"+params;
+  var http=new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.onreadystatechange = function()
+  {
+    if(http.readyState == 4 && http.status == 200) 
+    {
+    }
+  }
+  http.send(null);  
+
+}
+</script>
+<body >
+	<div id="graphics" style="height:400px;width:1200px;border-style:solid" onmousemove="f_mousemove(event)" onclick="f_click(event)" onmouseout="f_mouseout()">
+	</div>
+	<div id="buttons">
+	  <button id="manual" name="manual" onclick="f_manual();">Manual</button>
+	  <button id="clear" name="clear" onclick="f_clear();">clear</button>
+	  <br>
+	  <button id="svg" name="svg" onclick="f_svg();">svg</button>		
+	  SVG style:<input type="text" id="svgstyle" value="position:absolute;left:0px;top:0px;height:410px;width:1210px" size="80"><br>
+	  <button id="image" name="image" onclick="f_image();">image</button>
+	  Image:<input type="text" id="imagefile" value="./images/cutedolphin.png" size="80"><br>
+          Image Attributes: x <input type="text" id="imagex" value="50" size="3">
+	  &nbsp;y  <input type="text" id="imagey" value="150" size="3">
+	  &nbsp;height <input type="text" id="imageheight" value="250" size="5">
+	  <br>
+	  <button id="path" name="path" onclick="f_path();">path</button>
+	  Path style:<input type="text" id="pathstyle" value='stroke="blue" stroke-width="1" fill="none"' size="80"/>
+	</div>
+	<div>
+	<br>x=<span id="x"></span>&nbsp;y=<span id="y"></span>
+	</div>
+	<textarea id="textarea" cols="160" rows="40"></textarea><br>
+	SVG Directory:<input type="text" id="svgdir" value="./svgs/" size="80"><br>
+	SVG File Name:<input type="text" id="svgfile" value="cutedolphin.svg" size="80"><br>
+	<button id="readbutton" name="readbutton" onclick="f_readbutton();">Read SVG</button>
+	<button id="writebutton" name="writebutton" onclick="f_writebutton();">Write SVG</button>
+</body>
+</html>

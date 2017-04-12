@@ -1,0 +1,29 @@
+Upload:<input type="file" id="upfiles" name="upfiles[]" />
+<div id="text_div">
+	<textarea id="textarea" rows="22" cols="97"></textarea>
+</div>
+
+<script>
+  var the_text = '';
+
+  function handleFileSelect(evt) {
+    console.log('handleFileSelect entered');	  
+    var upfiles = evt.target.files; // FileList object
+    console.log('upfiles='+upfiles);
+    // upfiles is a FileList of File objects. List some properties.
+    var f = upfiles[0];	    
+    var reader = new FileReader();
+    reader.onload = (function(theFile) {
+      console.log('onload event');      
+      return function(e) {
+        console.log('returned function entered');		
+        console.log(e.target.result);		
+	document.getElementById('textarea').value = e.target.result;
+      };
+    })(f);
+    reader.readAsText(f);
+  }
+
+  console.log('adding handleFileSelect listener');
+  document.getElementById('upfiles').addEventListener('change', handleFileSelect, false);
+</script>

@@ -1,0 +1,37 @@
+<input type="file" id="upfiles" name="upfiles[]" />
+<div id="list"></div>
+<div id="text_div">
+	<textarea id="text" rows="22" cols="97"></textarea>
+</div>
+
+<script>
+  var the_text = '';
+
+  function handleFileSelect(evt) {
+    console.log('handleFileSelect entered');	  
+    var upfiles = evt.target.files; // FileList object
+    console.log('upfiles='+upfiles);
+    // upfiles is a FileList of File objects. List some properties.
+    var output = [];
+    for (var i = 0, f; f = upfiles[i]; i++) {
+      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                  f.size, ' bytes, last modified: ',
+                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                  '</li>');
+      var reader = new FileReader();
+      reader.onload = (function(theFile) {
+	console.log('onload event');      
+        return function(e) {
+          console.log('returned function entered');		
+          console.log(e.target.result);		
+	  document.getElementById('text').value = e.target.result;
+        };
+      })(f);
+      reader.readAsText(f);
+    }
+    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+  }
+
+  console.log('adding handleFileSelect listener');
+  document.getElementById('upfiles').addEventListener('change', handleFileSelect, false);
+</script>
