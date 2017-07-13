@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SVG Play</title>
+<style>
+body {font-size: xx-large}
+</style>
+<script>
+function f_click () {
+var mysvg = document.getElementById("my-svg");
+mysvg.innerHTML = '<circle onclick="f_click2();" id="my-circle" cx="100" cy="100" r="20" stroke="green" stroke-width="4" fill="yellow" />';
+}
+function f_click2 () {
+var mysvg = document.getElementById("my-svg");
+mysvg.innerHTML = '<circle onclick="f_click();" id="my-circle" cx="100" cy="100" r="95" stroke="green" stroke-width="4" fill="yellow" />';
+}
+</script>	
+</head>
+<body onload="f_load();">
+<h1>SVG Play</h1>
+<div>
+<svg width="250" height="250" id="my-svg">
+	<circle onclick="f_click();" id="my-circle" cx="100" cy="100" r="50" stroke="green" stroke-width="4" fill="red" />
+</svg>
+<br>Click the circle
+</div>
+</body>
+</html>
+

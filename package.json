@@ -1,6 +1,9 @@
 {
   "name": "jrb-sampleapp",
   "version": "1.0.0",
+   "engines": {
+    "node": "6.11.1"
+    },
   "description": "Modern Application Building Sample Applications",
   "main": "server.js",
   "scripts": {

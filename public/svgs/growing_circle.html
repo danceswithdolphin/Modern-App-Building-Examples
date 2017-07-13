@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Repeating Growing circle</title>
+<style>
+body {font-size: xx-large}
+</style>
+</head>
+<body>
+<h1>Repeating Growing circle</h1>
+<div>
+<svg width="250" height="250" id="my-svg">
+<circle onclick="f_click();" id="my-circle" cx="100" cy="100" r="20" stroke="green" stroke-width="4" fill="red">
+  <animate  attributeType="XML" attributeName="r" from="20" to="100"
+        dur="2s" repeatCount="indefinite"/>
+</circle>
+</svg>
+<br>Repeating Growing circle
+</div>
+</body>
+</html>
+

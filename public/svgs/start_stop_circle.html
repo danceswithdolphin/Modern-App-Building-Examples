@@ -1,0 +1,42 @@
+<svg width="500" height="250">
+    <circle id="circle1" cx="100" cy="100" r="95" stroke="green" stroke-width="4" fill="yellow"></circle>
+</svg>
+
+<script>
+    var timerFunction = null;
+    var grow = true;
+
+    function startAnimation() {
+        if(timerFunction == null) {
+            timerFunction = setInterval(animate, 20);
+        }
+    }
+
+    function stopAnimation() {
+        if(timerFunction != null){
+            clearInterval(timerFunction);
+            timerFunction = null;
+        }
+    }
+
+    function animate() {
+        var circle = document.getElementById("circle1");
+        var x = circle.getAttribute("r");
+	if (grow) {
+          var newX = 2 + parseInt(x);
+          if(newX > 195) {
+            grow = false;
+	  }
+	} else {
+	  var newX = -2 + parseInt(x);
+          if (newX < 22) {
+	    grow = true;
+	  }
+        }
+        circle.setAttribute("r", newX);
+    }
+</script>
+<br/>
+<input type="button" value="Start Animation" onclick="startAnimation();">
+<input type="button" value="Stop Animation" onclick="stopAnimation();">
+

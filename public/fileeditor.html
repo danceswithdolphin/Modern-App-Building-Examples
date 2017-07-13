@@ -4,11 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=2">
 <title>File Editor</title>
+<style>
+body {font-size:large;}
+button {font-size:large;}
+.button {font-size:large;}
+input {font-size:large;}
+textarea {font-size:large;}
+</style>
 <script>
 window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
     alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
     + ' Column: ' + column + ' StackTrace: ' +  errorObj);
-    }
+}
 
 var responseText = [];
 var errors = [];
@@ -152,7 +159,6 @@ function f_delete_file () {
     {
       document.getElementById("response").innerHTML = "deleted/loading";	    
       f_load();
-      // setTimeout(f_load,5000);
     }
   }
   http.send(null);  
@@ -201,6 +207,7 @@ function f_readdir () {
 	}
 	document.getElementById("dirs_div").innerHTML = innerhtml;
 
+
         if (urlParams.has('files')){
 	  innerhtml='Files: ';
 	  files = urlParams.get('files');
@@ -233,7 +240,7 @@ function f_readdir () {
 function f_load () {
   document.getElementById("response").innerHTML = '';
   if (window.localStorage["dirname"] !== undefined) {
-    document.getElementById("dir_name").value =window.localStorage["dirname"]; 
+    document.getElementById("dir_name").value =window.localStorage["dirname"];
   } else {
     window.localStorage["dirname"] = document.getElementById("dir_name").value; 
   }
@@ -254,26 +261,26 @@ function f_save () {
 </head>
 <body onload="f_load();">
 <h1>File Editor</h1>
-Directory: <input type="text" size="80" id="dir_name" value="public/data">
-<button type="button" onclick="f_save();f_load();">Load</button>
-<button type="button" onclick="f_up();">Up</button>
-<button type="button" onclick="f_makedir();">Create Subdirectory</button>
-<button type="button" onclick="f_delete_dir();">Delete directory</button><br>
+Directory: <input type="text" size="80" id="dir_name" value="public/data" class="button">
+<button type="button" onclick="f_save();f_load();" class="button">Load</button>
+<button type="button" onclick="f_up();" class="button">Up</button>
+<button type="button" onclick="f_makedir();" class="button">Create Subdirectory</button>
+<button type="button" onclick="f_delete_dir();" class="button">Delete directory</button><br>
 <br>
 <div id="dirs_div">
 </div>
 <div id="files_div">
 </div>
 <div id="text_area">
-	<textarea id="textarea" rows="19" cols="97"></textarea>
+	<textarea id="textarea" rows="18" cols="97" class="button"></textarea>
 </div>
-File: <input type="text" size="80" id="file_name" value="">
-<button type="button" onclick="f_save();f_write();">Write</button>
-<button type="button" onclick="f_delete_file();">Delete</button><br>
+File: <input type="text" class="button" size="80" id="file_name" value="">
+<button type="button" onclick="f_save();f_write();" class="button">Write</button>
+<button type="button" onclick="f_delete_file();" class="button">Delete</button><br>
 <br>
-<button type="button" onclick="f_download();">Download</button>
-<div style="visibility:hidden;" id="download_div"></div>
-Upload: <input type="file" id="upfilesid" name="upfiles[]" />
+<button type="button" onclick="f_download();" class="button">Download</button>
 <div id="response"></div>
+<div style="visibility:hidden;" id="download_div"></div>
+Upload: <input type="file" class="button" id="upfilesid" name="upfiles[]" />
 </body>
 </html>

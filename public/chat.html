@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=2">
 <title>Chat</title>
+<style>
+body {font-size:large;}
+button {font-size:large;}
+div {font-size:large;}
+.button {font-size:large;}
+input {font-size:large;}
+textarea {font-size:large;}
+#textarea {font-size:large;}
+</style>
 <script>
 window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
     alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
@@ -26,7 +35,6 @@ document.getElementById('audio').play();
 function f_readdir () {
   var url = "xhr-readdir";
   var params = "dirname=" + dirname;
-  // console.log('params='+params);
   var http=new XMLHttpRequest();
   http.open("GET", url+"?"+params, true);
   http.onreadystatechange = function() {
@@ -35,27 +43,19 @@ function f_readdir () {
     {
       responseText = http.responseText;
       responseText = responseText.replace(/\\/g,'/');
-      // console.log('responseText='+responseText);
       var urlParams = new URLSearchParams (responseText);
-      // console.log('params has error=' + urlParams.has('error'));
-      // console.log('params has subdirs=' + urlParams.has('subdirs'));
-      // console.log('params has files=' + urlParams.has('files'));
       if (urlParams.has('error')) {
         document.getElementById("files_div").innerHTML = responseText;
       } else {
-	// console.log('Processing Files');
         if (urlParams.has('files')){
 	  innerhtml='Files: ';
 	  files = urlParams.get('files');
 	  files = files.split(",");
-	  // console.log('files='+files);
 	  n = files.length;
 	  if (n > 0 && files[0] > '') {
 	    for (var i= 0; i < n; i++) {
-	      // console.log('files['+i+']='+files[i]);
 	      filesi = files[i].replace(/\\/g,'\\\\');
 	      filesi = files[i].replace(/\.\/public\/chats\//,'').replace(/\.txt/,'');
-	      // console.log('filesi='+filesi);
               innerhtml += '<button type="button" onclick="f_select_file(\''+filesi+'\');return false">' + filesi + '</button>';
 	    }
 	  } else {
@@ -64,7 +64,6 @@ function f_readdir () {
 	} else {
           innerhtml += 'There are no files in this directory';
         }
-	// console.log('innerhtml='+innerhtml);
 	document.getElementById("files_div").innerHTML = innerhtml;
 
 
@@ -75,26 +74,11 @@ function f_readdir () {
 }
 
 function f_select_file (selfile) {
-  // document.getElementById("files_div").innerHTML = '';
   document.getElementById("topic").value = selfile;
   f_tick();  
-  // var url = "xhr-read";
-  // var params = "filename=" + dirname + "/" + selfile + ".txt";
-  // var http=new XMLHttpRequest();
-  // http.open("GET", url+"?"+params, true);
-  // http.onreadystatechange = function()
-  // {
-    // if(http.readyState == 4 && http.status == 200) 
-    // {
-    //   console.log(http.responseText);
-    //   document.getElementById("textarea").innerHTML = http.responseText;
-    // }
-  // }
-  // http.send(null);  
 }
 
 function f_change_post (){
-  // console.log('f_change_post');
   var n=Date.now();
   n = new Date(n);
   n = n.toString();  
@@ -105,9 +89,7 @@ function f_change_post (){
   var myfile=encodeURIComponent(document.getElementById("topic").value);
   var mydata=document.getElementById("textarea").innerHTML;  
   var params="filename="+'./public/chats/'+myfile+'.txt'+"&mydata="+encodeURIComponent(mydata)+'<br><br>';
-  // console.log("params='"+params+"'");
   var url="xhr-write?"+params;
-  // console.log("url='"+url+"'");
   var http=new XMLHttpRequest();
   http.open("GET", url, true);
   http.onreadystatechange = function()
@@ -139,7 +121,6 @@ function f_change_topic () {
       var urlParams = new URLSearchParams (responseText);
       if (urlParams.has('error')) {} else {
       document.getElementById("textarea").innerHTML = http.responseText;
-      // console.log(http.responseText);
   var element = document.getElementById("textarea");
   element.scrollTop = element.scrollHeight;
       }
@@ -159,16 +140,10 @@ function f_tick(){
     if(http.readyState == 4 && http.status == 200) 
     {
       responseText = http.responseText;
-      // console.log(http.responseText);
       var urlParams = new URLSearchParams (responseText);
-      // console.log('params has stats=' + urlParams.has('stats'));
       if (urlParams.has("stats") && urlParams.get('stats') !== 'undefined'){ 
-	 // console.log(urlParams.get('stats'));     
         var stats=JSON.parse(urlParams.get('stats'));
-      // console.log(http.responseText);
-      // console.log('stats='+stats);
         var l_mtime=stats['mtime'];
-      // console.log('mtime='+mtime);
         if (l_mtime !== mtime){
           mtime = l_mtime
 	  var n_mtime = new Date (mtime);	  
