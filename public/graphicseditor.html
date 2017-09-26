@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
-    <script>
+<head>
+<script>
 var x = 0;
 var y = 0;
 var image_on = false;
@@ -18,7 +17,6 @@ function f_mousemove (event) {
   f_update('move');
 }
 function f_click(event) {
-  // console.log('f_click');	
   x=event.offsetX;
   y=event.offsetY;
   f_update('click');
@@ -35,7 +33,6 @@ function f_mouseout() {
   f_update('clear');
 }
 function f_update(xx) {
-  // console.log (xx + ' ' + x + ' ' + y);
   document.getElementById('x').innerHTML=x;
   document.getElementById('y').innerHTML=y;
 }
@@ -49,36 +46,34 @@ document.getElementById('textarea').value='';
 }
 
 function f_manual () {
-  document.getElementById('graphics').innerHTML = document.getElementById ('textarea').value;
+  document.getElementById('graphics').innerHTML 
+	  = document.getElementById ('textarea').value;
 }
 
 function f_svg () {
-	svghtml = '<svg style="'+ document.getElementById('svgstyle').value + '" >';
+	svghtml = '<svg style="' 
+		+ document.getElementById('svgstyle').value 
+		+ '" >';
+	document.getElementById('textarea').value=svghtml + '\n</svg>';
 }
 
 function f_compute_path() {
   var top = pathpoints.length;
-  // console.log('f_compute_path');
-  // console.log('top='+top);
-  // console.log('pathpoints='+pathpoints.join(' '));
   if (top < 2) {
-    // nothing to draw
     pathhtml = '';
   } else {
-    pathhtml = '<path ' + document.getElementById('pathstyle').value + ' d="M ' + pathpoints[0] + ' ';
+    pathhtml = '<path ' 
+	     + document.getElementById('pathstyle').value 
+	     + ' d="M ' + pathpoints[0] + ' ';
     var i=0;
     if (top < 3) {
-      // no Q part
     } else {
       pathhtml += 'Q ';
     }
     for (i=1; i < top; i=i+2) {
       if ( i === (top - 1)) {
-        // unpaired point
         pathhtml += 'L ' + pathpoints[i] + ' ';
-        // console.log (pathhtml);
       } else {
-      // old Q calc  pathhtml += pathpoints[i] + ' ' + pathpoints[i+1] + ' ';
         var A = pathpoints[i-1];
 	var X = pathpoints[i];
 	var B = pathpoints[i+1];
@@ -118,14 +113,20 @@ function f_image () {
   } else {
     image_on=true;
     document.getElementById('image').style.backgroundColor="yellow";
-    imagehtml= '<image href="' + document.getElementById("imagefile").value + '" x="' + document.getElementById("imagex").value + '" y="' + document.getElementById("imagey").value + '" height="'+document.getElementById("imageheight").value +'" />';
+    imagehtml = '<image href="' 
+	      + document.getElementById("imagefile").value 
+	      + '" x="' 
+	      + document.getElementById("imagex").value 
+	      + '" y="' 
+	      + document.getElementById("imagey").value 
+	      + '" height="'
+	      + document.getElementById("imageheight").value 
+	      + '" />';
     f_paint();
   }
 }
 
 function f_path(){
-  // console.log('f_path');
-  // console.log(document.getElementById('path'));
   if (path_on) {
     path_on=false;
     document.getElementById('path').style.backgroundColor="white";
@@ -133,7 +134,9 @@ function f_path(){
     path_on=true;
     document.getElementById('path').style.backgroundColor="yellow";
     if (pathhtml === '') {
-      pathhtml = '<path ' + document.getElementById('pathstyle').value + ' d="M ';
+      pathhtml = '<path ' 
+	       + document.getElementById('pathstyle').value 
+	       + ' d="M ';
     }
   }
 }
@@ -167,42 +170,74 @@ function f_writebutton() {
   {
     if(http.readyState == 4 && http.status == 200) 
     {
-      console.log(url);
     }
   }
   http.send(null);  
 
 }
 </script>
-  </head>
-  <body>
-    <div id="graphics" style="height:400px;width:1200px;border-style:solid" onmousemove="f_mousemove(event)"
-
-      onclick="f_click(event)" onmouseout="f_mouseout()"> </div>
-    <div id="buttons"> <button id="manual" name="manual" onclick="f_manual();">Manual</button>
-      <button id="clear" name="clear" onclick="f_clear();">clear</button> <br>
-      <button id="svg" name="svg" onclick="f_svg();">svg</button> SVG style:<input
-
-        id="svgstyle" value="position:absolute;left:0px;top:0px;height:410px;width:1210px"
-
-        size="80" type="text"><br>
-      <button id="image" name="image" onclick="f_image();">image</button> Image:<input
-
-        id="imagefile" value="./images/cutedolphin.png" size="80" type="text"><br>
-      Image Attributes: x <input id="imagex" value="50" size="3" type="text">
-      &nbsp;y <input id="imagey" value="150" size="3" type="text"> &nbsp;height
-      <input id="imageheight" value="250" size="5" type="text"> <br>
-      <button id="path" name="path" onclick="f_path();">path</button> Path
-      style:<input id="pathstyle" value="stroke=&quot;blue&quot; stroke-width=&quot;1&quot; fill=&quot;none&quot;"
-
-        size="80" type="text"> </div>
-    <div> <br>
-      x=<span id="x"></span>&nbsp;y=<span id="y"></span> </div>
-    <textarea id="textarea" cols="160" rows="40"></textarea><br>
-    SVG Directory:<input id="svgdir" value="./svgs/" size="80" type="text"><br>
-    SVG File Name:<input id="svgfile" value="cutedolphin.svg" size="80" type="text"><br>
-    <button id="readbutton" name="readbutton" onclick="f_readbutton();">Read SVG</button>
-    <button id="writebutton" name="writebutton" onclick="f_writebutton();">Write
-      SVG</button>
-  </body>
+<body >
+	<div id="graphics" 
+             style="height:400px;width:1200px;border-style:solid" 
+	     onmousemove="f_mousemove(event)" onclick="f_click(event)" 
+	     onmouseout="f_mouseout()">
+	</div>
+	<div id="buttons">
+	  <button id="manual" name="manual" onclick="f_manual();">
+		  Manual
+	  </button>
+	  <button id="clear" name="clear" onclick="f_clear();">
+		  clear
+	  </button>
+	  <br>
+	  <button id="svg" name="svg" onclick="f_svg();">svg</button>		
+	  SVG style:
+	  <input type="text" id="svgstyle" 
+    value="position:absolute;left:0px;top:0px;height:410px;width:1210px" 
+		 size="80">
+	  <br>
+	  <button id="image" name="image" onclick="f_image();">
+		  image
+	  </button>
+	  Image:
+	  <input type="text" 
+	         id="imagefile" 
+	         value="./images/cutedolphin.png" 
+	         size="80">
+	  <br>
+          Image Attributes: x 
+	  <input type="text" id="imagex" value="50" size="3">
+	  &nbsp;y  
+	  <input type="text" id="imagey" value="150" size="3">
+	  &nbsp;height 
+	  <input type="text" id="imageheight" value="250" size="5">
+	  <br>
+	  <button id="path" name="path" onclick="f_path();">path</button>
+	  Path style:
+	  <input type="text" 
+	         id="pathstyle" 
+	      value='stroke="blue" stroke-width="1" fill="none"' 
+	       size="80"/>
+	</div>
+	<div>
+	<br>x=<span id="x"></span>&nbsp;y=<span id="y"></span>
+	</div>
+	<textarea id="textarea" cols="160" rows="40"></textarea><br>
+	SVG Directory:
+	<input type="text" id="svgdir" value="./public/svgs/" size="80">
+	<br>
+	SVG File Name:
+	<input type="text" id="svgfile" value="cutedolphin.svg" size="80">
+	<br>
+	<button id="readbutton" 
+		name="readbutton" 
+		onclick="f_readbutton();">
+		Read SVG
+	</button>
+	<button id="writebutton" 
+	        name="writebutton" 
+	        onclick="f_writebutton();">
+		Write SVG
+	</button>
+</body>
 </html>
